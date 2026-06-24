@@ -1,11 +1,11 @@
-import * as admin from 'firebase-admin';
+import { initializeApp, cert, App } from 'firebase-admin';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-let firebaseApp: admin.app.App | null = null;
+let firebaseApp: App | null = null;
 let isInitialized = false;
 
-export function getFirebaseApp(): admin.app.App | null {
+export function getFirebaseApp(): App | null {
   if (!isInitialized) {
     const configPath = join(process.cwd(), 'firebase-service-account.json');
     if (!existsSync(configPath)) {
@@ -16,8 +16,8 @@ export function getFirebaseApp(): admin.app.App | null {
     } else {
       try {
         const serviceAccount = JSON.parse(readFileSync(configPath, 'utf8'));
-        firebaseApp = admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
+        firebaseApp = initializeApp({
+          credential: cert(serviceAccount),
         });
       } catch (error) {
         console.error('Failed to initialize Firebase Admin SDK:', error);

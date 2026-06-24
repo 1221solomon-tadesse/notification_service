@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { getMessaging } from 'firebase-admin/messaging';
 import { getFirebaseApp } from '../firebase.config';
 import { NotificationChannel, NotificationPayload } from '../interfaces/notification-channel.interface';
 
@@ -10,7 +11,7 @@ export class FcmChannel implements NotificationChannel {
   constructor() {
     const app = getFirebaseApp();
     if (app) {
-      this.messaging = app.messaging();
+      this.messaging = getMessaging(app);
     } else {
       this.logger.warn(
         'Firebase App is not initialized. FcmChannel will run in Dry-Run mode.',
