@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Demo — Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070b14;
+      --card: rgba(13, 20, 38, 0.85);
+      --border: rgba(255,255,255,0.07);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-glow: rgba(99,102,241,0.2);
+      --success: #10b981;
+      --success-bg: rgba(16,185,129,0.1);
+      --error: #f43f5e;
+      --error-bg: rgba(244,63,94,0.1);
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background-image:
+        radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(168,85,247,0.1) 0%, transparent 50%);
+    }
+
+    @media (max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+    }
+
+    /* ─── Left Panel ─────────────────────────────── */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.05));
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .brand-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+    }
+
+    .brand h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 400px;
+    }
+
+    .feature-list {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .feature-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-item h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .feature-item p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── Right Panel (Auth Forms) ───────────────── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 2rem;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .tab-switcher {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.65rem;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 9px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+    }
+
+    .form-header {
+      margin-bottom: 2rem;
+    }
+
+    .form-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 0.85rem 1rem 0.85rem 2.75rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.06);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .permission-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid;
+      transition: all 0.3s ease;
+    }
+
+    .permission-banner.idle {
+      background: rgba(245,158,11,0.08);
+      border-color: rgba(245,158,11,0.25);
+      color: var(--warning);
+    }
+
+    .permission-banner.granted {
+      background: var(--success-bg);
+      border-color: rgba(16,185,129,0.25);
+      color: var(--success);
+    }
+
+    .permission-banner.denied {
+      background: var(--error-bg);
+      border-color: rgba(244,63,94,0.25);
+      color: var(--error);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(99,102,241,0.35);
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99,102,241,0.45);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .alert {
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: none;
+      align-items: flex-start;
+      gap: 0.6rem;
+      border: 1px solid;
+      line-height: 1.5;
+    }
+
+    .alert.success {
+      background: var(--success-bg);
+      border-color: rgba(16,185,129,0.3);
+      color: var(--success);
+      display: flex;
+    }
+
+    .alert.error {
+      background: var(--error-bg);
+      border-color: rgba(244,63,94,0.3);
+      color: var(--error);
+      display: flex;
+    }
+
+    /* ─── Floating Notification Preview ─────────── */
+    .notif-preview {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 340px;
+      background: rgba(17, 24, 39, 0.97);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transform: translateY(-120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 999;
+    }
+
+    .notif-preview.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .notif-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .notif-icon {
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 4px;
+    }
+
+    .notif-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .notif-body {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ─── Config drawer ──────────────────────────── */
+    .config-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      margin-top: 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .config-toggle:hover { color: var(--text); }
+
+    .config-drawer {
+      margin-top: 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .config-drawer.open { display: flex; }
+
+    .config-drawer h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .config-drawer input {
+      font-size: 0.8rem;
+      padding: 0.6rem 0.75rem 0.6rem 0.75rem;
+    }
+
+    .btn-save-config {
+      background: rgba(99,102,241,0.15);
+      color: var(--primary);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-save-config:hover { background: rgba(99,102,241,0.25); }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+</head>
+<body>
+
+  <!-- ─── Left Branding Panel ─────────────────────── -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        </svg>
+      </div>
+      <h1>Push Notifications</h1>
+      <p>A demo showing how push notifications work when a user registers. Fill in the form and watch the notification arrive instantly.</p>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-dot">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <div>
+          <h3>User Registers</h3>
+          <p>Submits name, email and password via a standard form.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div>
+          <h3>Token Captured Silently</h3>
+          <p>The browser fetches the FCM token automatically in the background — the user never sees it.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </div>
+        <div>
+          <h3>Welcome Notification Sent</h3>
+          <p>The backend dispatches a push notification via Firebase immediately after saving the user.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Right Auth Panel ──────────────────────────── -->
+  <div class="right-panel">
+    <div class="auth-box">
+
+      <div class="tab-switcher">
+        <button class="tab-btn active" id="tabRegister" onclick="switchTab('register')">Register</button>
+        <button class="tab-btn" id="tabLogin" onclick="switchTab('login')">Login</button>
+      </div>
+
+      <!-- Register Form -->
+      <div id="formRegister">
+        <div class="form-header">
+          <h2>Create account</h2>
+          <p>Register and get a welcome notification instantly.</p>
+        </div>
+
+        <div class="form">
+          <div id="permBanner" class="permission-banner idle">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span id="permText">Initializing notifications…</span>
+          </div>
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              <input type="text" id="regName" placeholder="Bob Smith" autocomplete="name">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <input type="email" id="regEmail" placeholder="bob@example.com" autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <input type="password" id="regPassword" placeholder="Min. 6 characters" autocomplete="new-password">
+            </div>
+          </div>
+
+          <div id="regAlert" class="alert"></div>
+
+          <button class="btn-submit" id="btnRegister" onclick="handleRegister()">
+            <div class="spinner" id="regSpinner"></div>
+            <span id="regBtnText">Create Account & Get Notified</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <div id="formLogin" style="display:none">
+        <div class="form-header">
+          <h2>Welcome back</h2>
+          <p>Sign in to your account.</p>
+        </div>
+
+        <div class="form">
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              <input type="email" id="loginEmail" placeholder="bob@example.com" autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password">
+            </div>
+          </div>
+
+          <div id="loginAlert" class="alert"></div>
+
+          <button class="btn-submit" id="btnLogin" onclick="handleLogin()">
+            <div class="spinner" id="loginSpinner"></div>
+            <span id="loginBtnText">Sign In</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Firebase Config Drawer -->
+      <a class="config-toggle" onclick="toggleConfig()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+        Firebase Config
+      </a>
+
+      <div class="config-drawer" id="configDrawer">
+        <h4>Firebase Web App Credentials</h4>
+        <div class="config-grid">
+          <input type="text" id="cfgApiKey" placeholder="API Key">
+          <input type="text" id="cfgProjectId" placeholder="Project ID">
+          <input type="text" id="cfgSenderId" placeholder="Sender ID">
+          <input type="text" id="cfgAppId" placeholder="App ID">
+        </div>
+        <input type="text" id="cfgVapid" placeholder="VAPID Key (Web Push Certificate)" style="width:100%">
+        <button class="btn-save-config" onclick="saveConfig()">Save & Initialize</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Floating Notification Preview ──────────── -->
+  <div class="notif-preview" id="notifPreview">
+    <div class="notif-header">
+      <div class="notif-icon"></div>
+      <span>Notification Service • now</span>
+    </div>
+    <div class="notif-title" id="notifTitle"></div>
+    <div class="notif-body" id="notifBody"></div>
+  </div>
+
+  <script>
+    // ─── State ───────────────────────────────────────────
+    let fcmToken = null;
+    let messaging = null;
+    let isFirebaseReady = false;
+
+    // ─── Helpers ─────────────────────────────────────────
+    function getConfig() {
+      return {
+        apiKey:            localStorage.getItem('cfg_apiKey') || '',
+        projectId:         localStorage.getItem('cfg_projectId') || '',
+        messagingSenderId: localStorage.getItem('cfg_senderId') || '',
+        appId:             localStorage.getItem('cfg_appId') || '',
+        vapidKey:          localStorage.getItem('cfg_vapid') || '',
+      };
+    }
+
+    function setPermBanner(state, text) {
+      const el = document.getElementById('permBanner');
+      const textEl = document.getElementById('permText');
+      el.className = 'permission-banner ' + state;
+      textEl.textContent = text;
+    }
+
+    function showAlert(formPrefix, type, msg) {
+      const el = document.getElementById(formPrefix + 'Alert');
+      el.className = 'alert ' + type;
+      el.textContent = msg;
+    }
+
+    function clearAlert(formPrefix) {
+      const el = document.getElementById(formPrefix + 'Alert');
+      el.className = 'alert';
+    }
+
+    function setLoading(prefix, loading) {
+      const btn    = document.getElementById('btn' + prefix);
+      const spinner = document.getElementById(prefix.toLowerCase() + 'Spinner');
+      const text   = document.getElementById(prefix.toLowerCase() + 'BtnText');
+      btn.disabled = loading;
+      spinner.style.display = loading ? 'block' : 'none';
+      if (prefix === 'Register') {
+        text.textContent = loading ? 'Creating account…' : 'Create Account & Get Notified';
+      } else {
+        text.textContent = loading ? 'Signing in…' : 'Sign In';
+      }
+    }
+
+    function showInAppNotification(title, body) {
+      const preview = document.getElementById('notifPreview');
+      document.getElementById('notifTitle').textContent = title;
+      document.getElementById('notifBody').textContent = body;
+      preview.classList.add('show');
+      setTimeout(() => preview.classList.remove('show'), 6000);
+    }
+
+    // ─── Tab Switcher ─────────────────────────────────────
+    function switchTab(tab) {
+      document.getElementById('formRegister').style.display = tab === 'register' ? '' : 'none';
+      document.getElementById('formLogin').style.display    = tab === 'login'    ? '' : 'none';
+      document.getElementById('tabRegister').className = 'tab-btn' + (tab === 'register' ? ' active' : '');
+      document.getElementById('tabLogin').className    = 'tab-btn' + (tab === 'login'    ? ' active' : '');
+    }
+
+    // ─── Config Drawer ────────────────────────────────────
+    function toggleConfig() {
+      const drawer = document.getElementById('configDrawer');
+      drawer.classList.toggle('open');
+    }
+
+    function saveConfig() {
+      const cfg = {
+        apiKey:    document.getElementById('cfgApiKey').value.trim(),
+        projectId: document.getElementById('cfgProjectId').value.trim(),
+        senderId:  document.getElementById('cfgSenderId').value.trim(),
+        appId:     document.getElementById('cfgAppId').value.trim(),
+        vapid:     document.getElementById('cfgVapid').value.trim(),
+      };
+      localStorage.setItem('cfg_apiKey',    cfg.apiKey);
+      localStorage.setItem('cfg_projectId', cfg.projectId);
+      localStorage.setItem('cfg_senderId',  cfg.senderId);
+      localStorage.setItem('cfg_appId',     cfg.appId);
+      localStorage.setItem('cfg_vapid',     cfg.vapid);
+      document.getElementById('configDrawer').classList.remove('open');
+      initFirebase(); // Re-initialize with new credentials
+    }
+
+    // Populate config drawer from localStorage
+    function populateConfigDrawer() {
+      const c = getConfig();
+      document.getElementById('cfgApiKey').value    = c.apiKey;
+      document.getElementById('cfgProjectId').value = c.projectId;
+      document.getElementById('cfgSenderId').value  = c.messagingSenderId;
+      document.getElementById('cfgAppId').value     = c.appId;
+      document.getElementById('cfgVapid').value     = c.vapidKey;
+    }
+
+    // ─── Firebase Initialization (silent / background) ───
+    async function initFirebase() {
+      const cfg = getConfig();
+
+      if (!cfg.apiKey || !cfg.messagingSenderId || !cfg.appId || !cfg.vapidKey) {
+        setPermBanner('idle', 'Firebase not configured — click "Firebase Config" below to set up.');
+        return;
+      }
+
+      try {
+        setPermBanner('idle', 'Requesting notification permission…');
+
+        // Request notification permission from browser
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          setPermBanner('denied', 'Notifications blocked — please allow them in your browser settings.');
+          return;
+        }
+
+        // Initialize Firebase if not already done
+        if (firebase.apps.length === 0) {
+          firebase.initializeApp({
+            apiKey:            cfg.apiKey,
+            projectId:         cfg.projectId,
+            messagingSenderId: cfg.messagingSenderId,
+            appId:             cfg.appId,
+          });
+        }
+
+        messaging = firebase.messaging();
+
+        // Register service worker with credentials
+        const swUrl = `/firebase-messaging-sw.js?apiKey=${encodeURIComponent(cfg.apiKey)}&messagingSenderId=${encodeURIComponent(cfg.messagingSenderId)}&projectId=${encodeURIComponent(cfg.projectId)}&appId=${encodeURIComponent(cfg.appId)}`;
+        const registration = await navigator.serviceWorker.register(swUrl);
+
+        // Get the FCM token silently
+        fcmToken = await messaging.getToken({ vapidKey: cfg.vapidKey, serviceWorkerRegistration: registration });
+
+        isFirebaseReady = !!fcmToken;
+        setPermBanner('granted', 'Notifications enabled — you will receive a push when you register!');
+
+        // Handle foreground notifications
+        messaging.onMessage((payload) => {
+          showInAppNotification(
+            payload.notification?.title || 'Notification',
+            payload.notification?.body  || ''
+          );
+        });
+
+      } catch (err) {
+        setPermBanner('denied', 'Could not enable notifications: ' + err.message);
+        console.error(err);
+      }
+    }
+
+    // ─── Register Handler ─────────────────────────────────
+    async function handleRegister() {
+      clearAlert('reg');
+      const name     = document.getElementById('regName').value.trim();
+      const email    = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+
+      if (!name || !email || !password) {
+        showAlert('reg', 'error', 'Please fill in all fields.');
+        return;
+      }
+      if (password.length < 6) {
+        showAlert('reg', 'error', 'Password must be at least 6 characters.');
+        return;
+      }
+
+      setLoading('Register', true);
+
+      try {
+        const body = { name, email, password };
+        // Attach FCM token if available — backend will fire the push notification
+        if (fcmToken) body.fcmToken = fcmToken;
+
+        const res = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Registration failed.');
+        }
+
+        showAlert('reg', 'success', `Welcome, ${data.name}! Account created. Watch for your notification!`);
+        document.getElementById('regName').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
+
+      } catch (err) {
+        showAlert('reg', 'error', err.message);
+      } finally {
+        setLoading('Register', false);
+      }
+    }
+
+    // ─── Login Handler ────────────────────────────────────
+    async function handleLogin() {
+      clearAlert('login');
+      const email    = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showAlert('login', 'error', 'Please fill in all fields.');
+        return;
+      }
+
+      setLoading('Login', true);
+
+      try {
+        const body = { email, password };
+        if (fcmToken) body.fcmToken = fcmToken; // Keep token fresh on each login
+
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Login failed.');
+        }
+
+        showAlert('login', 'success', `Welcome back, ${data.name}!`);
+
+      } catch (err) {
+        showAlert('login', 'error', err.message);
+      } finally {
+        setLoading('Login', false);
+      }
+    }
+
+    // ─── Boot ─────────────────────────────────────────────
+    populateConfigDrawer();
+    initFirebase();
+  </script>
+
+</body>
+</html>

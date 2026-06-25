@@ -8,9 +8,9 @@ let isInitialized = false;
 export function getFirebaseApp(): App | null {
   if (!isInitialized) {
     const configPath = join(process.cwd(), 'firebase-service-account.json');
-    if (!existsSync(configPath)) {
+    if (process.env.NODE_ENV === 'test' || !existsSync(configPath)) {
       console.warn(
-        '⚠️ firebase-service-account.json not found in root directory. Running Firebase Admin SDK in dry-run/sandbox mode.',
+        '⚠️ Running Firebase Admin SDK in dry-run/sandbox mode (forced in test environment or credential file missing).',
       );
       firebaseApp = null;
     } else {
